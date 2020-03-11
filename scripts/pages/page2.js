@@ -7,6 +7,8 @@ const extend = require("js-base/core/extend");
 const Color = require("sf-core/ui/color");
 const System = require("sf-core/device/system");
 
+const HTTP = require("sf-core/net/http");
+
 // Get generated UI code
 const Page2Design = require('ui/ui_page2');
 
@@ -20,9 +22,23 @@ const Page2 = extend(Page2Design)(
         // Overrides super.onLoad method
         this.onLoad = onLoad.bind(this, this.onLoad.bind(this));
         this.btnSayHello.onPress = () => {
-            alert("Hello World!");
+            getRandomCatFact();
         };
     });
+
+/*
+Get a random cat fact
+*/
+function getRandomCatFact(){
+    var sessionManager = new HTTP();
+    var apiRequest = sessionManager.requestJSON({
+        url : "https://catfact.ninja/fact?max_length=140",
+        onLoad : function(e){
+            factData = e.JSON.fact;
+            alert(factData);
+        }
+    })
+}
 
 /**
  * @event onShow
