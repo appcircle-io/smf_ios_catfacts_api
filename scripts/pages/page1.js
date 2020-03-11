@@ -5,7 +5,7 @@ const PageTitleLayout = require("components/PageTitleLayout");
 const extend = require("js-base/core/extend");
 const System = require("sf-core/device/system");
 
-// Get generated UI code - UMUT
+// Get generated UI code - UMUTK
 const Page1Design = require("ui/ui_page1");
 
 const Page1 = extend(Page1Design)(
