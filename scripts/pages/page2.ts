@@ -1,41 +1,39 @@
-const HeaderBarItem = require("sf-core/ui/headerbaritem");
-const touch = require("sf-extension-utils/lib/touch");
-const Image = require("sf-core/ui/image");
-const PageTitleLayout = require("components/PageTitleLayout");
-const componentContextPatch = require("@smartface/contx/lib/smartface/componentContextPatch");
-const extend = require("js-base/core/extend");
-const Color = require("sf-core/ui/color");
-const System = require("sf-core/device/system");
+import HeaderBarItem         = require("sf-core/ui/headerbaritem");
+import touch                 = require("sf-extension-utils/lib/touch");
+import Image                 = require("sf-core/ui/image");
+import PageTitleLayout         from "components/PageTitleLayout";
+import componentContextPatch = require("@smartface/contx/lib/smartface/componentContextPatch");
+import Color                 = require("sf-core/ui/color");
+import System                = require("sf-core/device/system");
+import Page2Design             from "generated/pages/page2";
+import HTTP                  = require('sf-core/net/http');
 
-const HTTP = require("sf-core/net/http");
-
-// Get generated UI code
-const Page2Design = require('ui/ui_page2');
-
-const Page2 = extend(Page2Design)(
-    // Constructor
-    function(_super, routeData, router) {
-        // Initalizes super class for this page scope
-        _super(this);
-        // Overrides super.onShow method
-        this.onShow = onShow.bind(this, this.onShow.bind(this));
-        // Overrides super.onLoad method
+export default class Page2 extends Page2Design {
+	constructor() {
+		super();
+		// Overrides super.onShow method
+		this.onShow = onShow.bind(this, this.onShow.bind(this));
+		// Overrides super.onLoad method
         this.onLoad = onLoad.bind(this, this.onLoad.bind(this));
-        this.btnSayHello.onPress = () => {
-            getRandomCatFact();
-        };
-    });
+        touch.addPressEvent(this.btnSayHello, () => {
+            getRandomCatFact('180');
+        });
+	}
+}
 
 /*
 Get a random cat fact
 */
-function getRandomCatFact(){
+function getRandomCatFact(characters:string){
     var sessionManager = new HTTP();
-    var apiRequest = sessionManager.requestJSON({
-        url : "https://catfact.ninja/fact?max_length=140",
+    var apiRequest     = sessionManager.requestJSON({
+        url : "https://catfact.ninja/fact?max_length=" + characters,
         onLoad : function(e){
-            factData = e.JSON.fact;
+            let factData = e.JSON.fact;
             alert(factData);
+        },
+        onError : function(err){
+            alert("Great Scott!!");
         }
     })
 }
@@ -84,4 +82,3 @@ function onLoad(superOnLoad) {
     headerBar.itemColor = Color.WHITE;
 }
 
-module.exports = Page2;
